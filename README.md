@@ -1,4 +1,5 @@
-# Kehittynyt Android ohjelmointi sovellus: 3 b) Kartta- ja paikannussovellus
+# Kehittynyt Android ohjelmointi sovellus: 
+# 3 b) Kartta- ja paikannussovellus
 androidsovellus jossa näkyy käyttäjän sijainti kartalla
 
 ## Ohjelmistot ja niiden vaatimukset
