@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">AA</string>
+
     <string name="google_map_api">AIzaSyCVRYq8poNxZzlIYLQfi89V1Lft7ZftOFk</string>
+
 </resources>
