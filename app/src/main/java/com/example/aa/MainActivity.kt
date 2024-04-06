@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
         android.Manifest.permission.ACCESS_FINE_LOCATION
     )
 
-    //Llocation client and location callback.
+    //Location client and location callback.
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
     //Check if location updates are needed.
