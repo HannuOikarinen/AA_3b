@@ -1,6 +1,6 @@
 package com.example.aa
 
-// Import statements for Android, Compose, and Google Location and Maps services.
+//Import statements for Android, Compose, and Google Location and Maps services.
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
@@ -45,19 +45,19 @@ import com.google.maps.android.compose.rememberCameraPositionState
 
 class MainActivity : ComponentActivity() {
 
-    // Define location permissions required by the app.
+    //Define location permissions required by the app.
     private val permission = arrayOf(
         android.Manifest.permission.ACCESS_COARSE_LOCATION,
         android.Manifest.permission.ACCESS_FINE_LOCATION
     )
 
-    // Llocation client and location callback.
+    //Llocation client and location callback.
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
-    // Check if location updates are needed.
+    //Check if location updates are needed.
     private var locationRequired: Boolean = false
 
-    // Continue location updates when app resumes.
+    //Continue location updates when app resumes.
     override fun onResume() {
         super.onResume()
         if (locationRequired) {
@@ -65,7 +65,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    // Stop location updates when app pauses.
+    //Stop location updates when app pauses.
     override fun onPause() {
         super.onPause()
         locationCallback?.let {
@@ -73,7 +73,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    // Configure and start receiving location updates.
+    //Configure and start receiving location updates.
     @SuppressLint("MissingPermission")
     private fun startLocationUpdates() {
         locationCallback?.let {
@@ -93,38 +93,38 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    // onCreate lifecycle callback to set up the UI and initialize location services.
+    //onCreate lifecycle callback to set up the UI and initialize location services.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Initialize Google Maps
+        //Initialize Google Maps
         MapsInitializer.initialize(this, MapsInitializer.Renderer.LATEST){
 
         }
 
-        // Initialize the fused location provider
+        //Initialize the fused location provider
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         setContent {
 
-            // Remember the current location
+            //Remember the current location
             var currentLocation by remember {
                 mutableStateOf(LatLng(0.toDouble(),0.toDouble()))
             }
 
-            // Remember camera position for map
+            //Remember camera position for map
             val cameraPosition = rememberCameraPositionState{
                 position = CameraPosition.fromLatLngZoom(
                     currentLocation, 10f
                 )
             }
 
-            // Remember and manage camera position
+            //Remember and manage camera position
             var cameraPositionState by remember {
                 mutableStateOf(cameraPosition)
             }
 
-            // Callback that updates the location for UI
+            //Callback that updates the location for UI
             locationCallback = object: LocationCallback() {
                 override fun onLocationResult(p0: LocationResult) {
                     super.onLocationResult(p0)
@@ -140,13 +140,13 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            // Apply theme
+            //Apply theme
             AATheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    // Display the location screen with the current location and camera position.
+                    //Display the location screen with the current location and camera position.
                     LocationScreen(this@MainActivity, currentLocation, cameraPositionState)
                 }
             }
@@ -157,7 +157,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun LocationScreen(context: Context, currentLocation: LatLng, cameraPositionState: CameraPositionState) {
 
-        // Request for more permissions if needed
+        //Request for more permissions if needed
         val launchMultiplePermissions = rememberLauncherForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()) { permissionMaps ->
             val areGranted = permissionMaps.values.reduce {acc, next -> acc && next}
@@ -174,7 +174,7 @@ class MainActivity : ComponentActivity() {
 
         Box(modifier = Modifier.fillMaxSize()) {
 
-            // Display the map
+            //Display the map
             GoogleMap(
                 modifier = Modifier.fillMaxSize(),
                 cameraPositionState = cameraPositionState
@@ -193,9 +193,9 @@ class MainActivity : ComponentActivity() {
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
-                // Current coordinates
+                //Current coordinates
                 Text(text = "Your location: ${currentLocation.latitude}/${currentLocation.longitude}")
-                // Get location and check for permissions
+                //Get location and check for permissions
                 Button(onClick = {
                     if (permission.all {
                             ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
