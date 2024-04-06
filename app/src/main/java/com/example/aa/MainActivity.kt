@@ -43,7 +43,6 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 
-// Main activity class that extends ComponentActivity to use Compose for UI.
 class MainActivity : ComponentActivity() {
 
     // Define location permissions required by the app.
@@ -52,13 +51,13 @@ class MainActivity : ComponentActivity() {
         android.Manifest.permission.ACCESS_FINE_LOCATION
     )
 
-    // Lateinit vars for fused location client and location callback.
+    // Llocation client and location callback.
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
-    // Flag to check if location updates are needed.
+    // Check if location updates are needed.
     private var locationRequired: Boolean = false
 
-    // onResume lifecycle callback to start location updates when app resumes.
+    // Continue location updates when app resumes.
     override fun onResume() {
         super.onResume()
         if (locationRequired) {
@@ -66,7 +65,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    // onPause lifecycle callback to remove location updates when app pauses.
+    // Stop location updates when app pauses.
     override fun onPause() {
         super.onPause()
         locationCallback?.let {
@@ -74,7 +73,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    // Method to configure and start receiving location updates.
+    // Configure and start receiving location updates.
     @SuppressLint("MissingPermission")
     private fun startLocationUpdates() {
         locationCallback?.let {
@@ -98,35 +97,34 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Initialize Google Maps services.
+        // Initialize Google Maps
         MapsInitializer.initialize(this, MapsInitializer.Renderer.LATEST){
 
         }
 
-        // Initialize the fused location provider client.
+        // Initialize the fused location provider
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        // Set the content of the UI using Compose.
         setContent {
 
-            // Remember the current location as mutable state.
+            // Remember the current location
             var currentLocation by remember {
                 mutableStateOf(LatLng(0.toDouble(),0.toDouble()))
             }
 
-            // Remember camera position state for Google Maps.
+            // Remember camera position for map
             val cameraPosition = rememberCameraPositionState{
                 position = CameraPosition.fromLatLngZoom(
                     currentLocation, 10f
                 )
             }
 
-            // Remember and manage camera position state.
+            // Remember and manage camera position
             var cameraPositionState by remember {
                 mutableStateOf(cameraPosition)
             }
 
-            // Define a location callback to update the location in the UI.
+            // Callback that updates the location for UI
             locationCallback = object: LocationCallback() {
                 override fun onLocationResult(p0: LocationResult) {
                     super.onLocationResult(p0)
@@ -142,7 +140,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            // Apply the app theme and set up the main surface.
+            // Apply theme
             AATheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -155,11 +153,11 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    // Composable function to display the location screen.
+    
     @Composable
     private fun LocationScreen(context: Context, currentLocation: LatLng, cameraPositionState: CameraPositionState) {
 
-        // Launch multiple permissions request if needed.
+        // Request for more permissions if needed
         val launchMultiplePermissions = rememberLauncherForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()) { permissionMaps ->
             val areGranted = permissionMaps.values.reduce {acc, next -> acc && next}
@@ -174,10 +172,9 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        // Layout for displaying the map and location button.
         Box(modifier = Modifier.fillMaxSize()) {
 
-            // Display Google Map with the current location marker.
+            // Display the map
             GoogleMap(
                 modifier = Modifier.fillMaxSize(),
                 cameraPositionState = cameraPositionState
@@ -191,23 +188,20 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
-            // Column for text and button, aligned at the bottom center.
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
-                // Display current location coordinates.
+                // Current coordinates
                 Text(text = "Your location: ${currentLocation.latitude}/${currentLocation.longitude}")
-                // Button to get current location; checks permission and requests updates.
+                // Get location and check for permissions
                 Button(onClick = {
                     if (permission.all {
                             ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
                         }) {
-                        // If permissions are granted, start location updates.
                         startLocationUpdates()
                     } else {
-                        // If not, request permissions.
                         launchMultiplePermissions.launch(permission)
                     }
                 }) {
